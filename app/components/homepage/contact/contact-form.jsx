@@ -25,21 +25,24 @@ function ContactForm() {
   const handleSendMail = async (e) => {
     e.preventDefault();
 
-    if (!userInput.email || !userInput.message || !userInput.name || !userInput.subject) {
+    if (
+      !userInput.email ||
+      !userInput.message ||
+      !userInput.name ||
+      !userInput.subject
+    ) {
       setError({ ...error, required: true });
       return;
     } else if (error.email) {
       return;
     } else {
       setError({ ...error, required: false });
-    };
+    }
 
     try {
       setIsLoading(true);
-      const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_APP_URL}/api/contact`,
-        userInput
-      );
+
+      const res = await axios.post("/api/contact", userInput);
 
       toast.success("Message sent successfully!");
       setUserInput({
@@ -49,10 +52,10 @@ function ContactForm() {
         message: "",
       });
     } catch (error) {
-      toast.error(error?.response?.data?.message);
+      toast.error(error?.response?.data?.message || "Something went wrong.");
     } finally {
       setIsLoading(false);
-    };
+    }
   };
 
   return (
